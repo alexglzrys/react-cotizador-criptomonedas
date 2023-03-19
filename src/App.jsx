@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
 import ImagenCriptomonedas from "./assets/img/imagen-criptos.png";
 import { Formulario } from "./components/Formulario";
 
@@ -53,13 +54,36 @@ const Heading = styled.h1`
 `;
 
 function App() {
+  const [monedas, setMonedas] = useState({});
+  const [cotizacion, setCotizacion] = useState({});
+
+  // Efecto secundario que observa cambios en las monedas
+  useEffect(() => {
+    if (Object.keys(monedas).length > 0) {
+      // Consultar API para la cotización de monedas
+      const cotizarCriptomoneda = async () => {
+        const { criptomoneda, moneda } = monedas;
+        const URL = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
+        const respuesta = await fetch(URL);
+        const resultado = await respuesta.json();
+        setCotizacion(resultado.DISPLAY[criptomoneda][moneda]);
+      };
+      cotizarCriptomoneda();
+    }
+  }, [monedas]);
+
+  const hanldeCotizarCriptomoneda = (monedas_seleccionadas) => {
+    // Establecer las nuevas monedas a cotizar
+    setMonedas(monedas_seleccionadas);
+  };
+
   return (
     <Contenedor>
       {/* Los atributos se declaran de forma normal en un elemento img */}
       <Imagen src={ImagenCriptomonedas} alt="Imagen Criptomonedas" />
       <div>
         <Heading>Cotiza Criptomonedas al Instante</Heading>
-        <Formulario />
+        <Formulario hanldeCotizarCriptomoneda={hanldeCotizarCriptomoneda} />
       </div>
     </Contenedor>
   );

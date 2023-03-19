@@ -24,7 +24,7 @@ const InputSubmit = styled.input`
   }
 `;
 
-export const Formulario = () => {
+export const Formulario = ({ hanldeCotizarCriptomoneda }) => {
   // Estado para almacenar las criptomonedas recuperadas desde el API
   const [criptomonedas, setCriptomonedas] = useState([]);
   const [error, setError] = useState(false);
@@ -62,6 +62,7 @@ export const Formulario = () => {
       return false;
     }
     setError(false);
+    hanldeCotizarCriptomoneda({ moneda, criptomoneda });
   };
 
   return (
