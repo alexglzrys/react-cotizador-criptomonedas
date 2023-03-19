@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import ImagenCriptomonedas from "./assets/img/imagen-criptos.png";
+import { Cotizacion } from "./components/Cotizacion";
 import { Formulario } from "./components/Formulario";
 
 // Styled Components
@@ -57,7 +58,7 @@ function App() {
   const [monedas, setMonedas] = useState({});
   const [cotizacion, setCotizacion] = useState({});
 
-  // Efecto secundario que observa cambios en las monedas
+  // Efecto secundario que observa cambios en las monedas para invocar la API y generar una nueva cotización
   useEffect(() => {
     if (Object.keys(monedas).length > 0) {
       // Consultar API para la cotización de monedas
@@ -84,6 +85,7 @@ function App() {
       <div>
         <Heading>Cotiza Criptomonedas al Instante</Heading>
         <Formulario hanldeCotizarCriptomoneda={hanldeCotizarCriptomoneda} />
+        {cotizacion.PRICE && <Cotizacion cotizacion={cotizacion} />}
       </div>
     </Contenedor>
   );
