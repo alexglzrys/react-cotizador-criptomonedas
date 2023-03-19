@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import ImagenCriptomonedas from "./assets/img/imagen-criptos.png";
+import { Formulario } from "./components/Formulario";
 
 // Styled Components
 // Los estilos se encuentran encapsulados en cada componente, si un componente se elimina sus estilos también (limpieza sana en el proyecto)
@@ -38,6 +39,14 @@ const Heading = styled.h1`
   text-align: center;
   font-weight: 700;
   margin: 0 0 1rem 0;
+  &::after {
+    content: "";
+    display: block;
+    height: 0.2rem;
+    width: 100px;
+    margin: 0.5rem auto;
+    background-color: #7a7dfe;
+  }
   @media screen and (min-width: 768px) {
     margin: 4rem 0 1rem 0;
   }
@@ -50,6 +59,7 @@ function App() {
       <Imagen src={ImagenCriptomonedas} alt="Imagen Criptomonedas" />
       <div>
         <Heading>Cotiza Criptomonedas al Instante</Heading>
+        <Formulario />
       </div>
     </Contenedor>
   );
