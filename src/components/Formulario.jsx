@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
 import { monedas } from "../data/monedas";
 import { useSelectMonedas } from "../hooks/useSelectMonedas";
 
@@ -23,11 +24,37 @@ const InputSubmit = styled.input`
 `;
 
 export const Formulario = () => {
+  // Estado para almacenar las criptomonedas recuperadas desde el API
+  const [criptomonedas, setCriptomonedas] = useState([]);
+
   // Usar hook personalizado para los selectores de moneda
   const [moneda, SelectMoneda] = useSelectMonedas("Elige tu moneda", monedas);
+  // Una vez recuperadas las criptos, el componente se actualiza, pues se almacenan en el estado local de este componente, por tanto, cuando se vuelva a pintar se le pasa el listado de criptos recuperadas al hook personalizado
+  const [criptomoneda, SelectCriptomoneda] = useSelectMonedas(
+    "Elige tu criptomoneda",
+    criptomonedas
+  );
+
+  // Efecto secundario para obtener información de un API
+  useEffect(() => {
+    const consultarAPI = async () => {
+      const URL =
+        "https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD";
+      const respuesta = await fetch(URL);
+      const resultado = await respuesta.json();
+      const arrayCriptomonedas = resultado.Data.map((cripto) => ({
+        id: cripto.CoinInfo.Name,
+        nombre: cripto.CoinInfo.FullName,
+      }));
+      setCriptomonedas(arrayCriptomonedas);
+    };
+    consultarAPI();
+  }, []);
+
   return (
     <form>
       <SelectMoneda />
+      <SelectCriptomoneda />
       <InputSubmit type="button" value="Cotizar" />
     </form>
   );
