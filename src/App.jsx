@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ImagenCriptomonedas from "./assets/img/imagen-criptos.png";
 import { Cotizacion } from "./components/Cotizacion";
 import { Formulario } from "./components/Formulario";
+import { Spinner } from "./components/Spinner";
 
 // Styled Components
 // Los estilos se encuentran encapsulados en cada componente, si un componente se elimina sus estilos también (limpieza sana en el proyecto)
@@ -57,17 +58,25 @@ const Heading = styled.h1`
 function App() {
   const [monedas, setMonedas] = useState({});
   const [cotizacion, setCotizacion] = useState({});
+  const [cargando, setCargando] = useState(false);
 
   // Efecto secundario que observa cambios en las monedas para invocar la API y generar una nueva cotización
   useEffect(() => {
     if (Object.keys(monedas).length > 0) {
       // Consultar API para la cotización de monedas
       const cotizarCriptomoneda = async () => {
+        // setear estado actual
+        setCargando(true);
+        setCotizacion({});
+
         const { criptomoneda, moneda } = monedas;
         const URL = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
         const respuesta = await fetch(URL);
         const resultado = await respuesta.json();
+
+        // Establecer nuevo estado
         setCotizacion(resultado.DISPLAY[criptomoneda][moneda]);
+        setCargando(false);
       };
       cotizarCriptomoneda();
     }
@@ -85,6 +94,7 @@ function App() {
       <div>
         <Heading>Cotiza Criptomonedas al Instante</Heading>
         <Formulario hanldeCotizarCriptomoneda={hanldeCotizarCriptomoneda} />
+        {cargando && <Spinner />}
         {cotizacion.PRICE && <Cotizacion cotizacion={cotizacion} />}
       </div>
     </Contenedor>
